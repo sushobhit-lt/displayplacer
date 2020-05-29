@@ -215,14 +215,15 @@ void getScreens() {
 
         for(int i = 0; i < modeCount; i++) {
             modes_D4 mode = modes[i];
-            
+            if(i > 0){
+                printf(",");
+            }
             if(mode.derived.density == 2.0) { //scaling on
                 printf("%dx%d", mode.derived.width, mode.derived.height);
             }
             else { //scaling off
                 printf("%dx%d", mode.derived.width, mode.derived.height);
-            }
-            printf(",");
+            }            
         }
         printf("\n");
     }
