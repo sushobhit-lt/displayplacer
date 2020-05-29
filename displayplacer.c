@@ -7,6 +7,10 @@
 #include "header.h"
 
 int main(int argc, char * argv[]) {
+
+    getScreens();
+    return 0;
+
     if(argc == 1 || strcmp(argv[1], "--help") == 0) {
         printHelp();
         return 0;
@@ -185,6 +189,40 @@ void listScreens() {
                     printf("mode %i: Res=%dx%d\n", i, mode.derived.width, mode.derived.height);
                 }
             }
+        }
+        printf("\n");
+    }
+}
+
+void getScreens() {
+    CGDisplayCount screenCount;
+    CGGetActiveDisplayList(INT_MAX, NULL, &screenCount); //get number of active screens and store in screenCount
+
+    CGDirectDisplayID screenList[screenCount];
+    CGGetActiveDisplayList(INT_MAX, screenList, &screenCount);
+    
+    for (int i = 0; i < screenCount; i++) {
+        UInt32 curScreen = screenList[i];
+        
+        // printf("Screen ID: %i\n", curScreen);
+        // printf("Resolution: %lux%lu\n", CGDisplayPixelsWide(curScreen), CGDisplayPixelsHigh(curScreen));
+        // printf("Rotation: %i\n", (int) CGDisplayRotation(curScreen));
+        // printf("Origin: (%i,%i)\n", (int) CGDisplayBounds(curScreen).origin.x, (int) CGDisplayBounds(curScreen).origin.y);
+        
+        int modeCount;
+        modes_D4* modes;
+        CopyAllDisplayModes(curScreen, &modes, &modeCount);
+
+        for(int i = 0; i < modeCount; i++) {
+            modes_D4 mode = modes[i];
+            
+            if(mode.derived.density == 2.0) { //scaling on
+                printf("%dx%d", mode.derived.width, mode.derived.height);
+            }
+            else { //scaling off
+                printf("%dx%d", mode.derived.width, mode.derived.height);
+            }
+            printf(",");
         }
         printf("\n");
     }
